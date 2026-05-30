@@ -9,13 +9,23 @@ It automatically performs the following tasks:
 - **Similarity Search**: Retrieves similar past complaints using cosine similarity over text embeddings.
 
 ---
+## Project Screenshots
+# Text Complaint 
+<img width="1001" height="1279" alt="image" src="https://github.com/user-attachments/assets/681e20c1-a829-4f33-812e-c4296e170ece" />
+
+# Audio Complaint 
+<img width="992" height="1274" alt="image" src="https://github.com/user-attachments/assets/02e6677f-0c7c-4c49-9996-c5dcac5783f3" />
+
+# Video Complaint 
+<img width="984" height="1289" alt="image" src="https://github.com/user-attachments/assets/8cdc0fef-3699-4c48-bee3-84f76c2e9fb7" />
+
 
 ## Project Structure
 
 ```
 complaint-routing-system/
 ├── data/
-│   ├── generate_data.py          # Synthetic multilingual complaint generator
+│   ├── generate_data.py          # Synthetic complaint generator
 │   └── synthetic_complaints.csv  # 800 labelled complaints (auto-generated)
 ├── models/
 │   ├── train.py                  # End-to-end training pipeline
@@ -45,7 +55,7 @@ complaint-routing-system/
 # Core requirements
 pip install scikit-learn numpy pandas scipy joblib
 
-# Embedding model (multilingual support)
+# Embedding model
 pip install sentence-transformers
 
 # Web UI
@@ -87,7 +97,7 @@ python evaluation/evaluate.py
 
 The system takes in text, audio, or video. If audio or video is provided, it uses the local Whisper model to transcribe the speech offline.
 
-The text is then passed to an embedding engine (using sentence-transformers for multilingual support). The resulting vector is passed to three separate scikit-learn models:
+The text is then passed to an embedding engine (using sentence-transformers). The resulting vector is passed to three separate scikit-learn models:
 1. Support Vector Machine (Officer Routing)
 2. Random Forest (Priority)
 3. Gradient Boosting Regressor (ETA)
@@ -109,14 +119,14 @@ Note: The synthetic data has very clear departmental boundaries (e.g., "pothole"
 ### Priority Prediction (Random Forest)
 | Metric | Value |
 |--------|-------|
-| CV Accuracy | 0.686 ± 0.024 |
-| CV F1-macro | 0.661 ± 0.041 |
+| CV Accuracy | 0.578 ± 0.014 |
+| CV F1-macro | 0.566 ± 0.020 |
 
 ### ETA Prediction (Gradient Boosting)
 | Metric | Value |
 |--------|-------|
-| CV MAE | 5.47 days |
-| CV RMSE | 7.69 days |
+| CV MAE | 5.25 days |
+| CV RMSE | 7.62 days |
 
 ---
 

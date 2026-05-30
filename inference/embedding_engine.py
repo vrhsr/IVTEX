@@ -99,7 +99,7 @@ def get_embedding_engine(prefer_transformer: bool = True):
     if prefer_transformer:
         try:
             engine = SentenceTransformerEngine()
-            print("[EmbeddingEngine] Using sentence-transformers (multilingual).")
+            print("[EmbeddingEngine] Using sentence-transformers (English).")
             return engine
         except (ImportError, Exception) as e:
             print(f"[EmbeddingEngine] sentence-transformers unavailable ({e})."

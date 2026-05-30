@@ -159,7 +159,22 @@ def route_audio_complaint(audio_file, top_k: int) -> tuple:
     try:
         result = engine.process(audio_path=audio_file, top_k=int(top_k))
     except ImportError as e:
-        return f"<p style='color:orange'>{e}</p>", ""
+        return f"<p style='color:orange;font-weight:600'>Dependency Error: {e}</p>", ""
+    except Exception as e:
+        err_msg = str(e)
+        if "ffmpeg" in err_msg.lower() or "winerror 2" in err_msg.lower():
+            return (
+                "<div style='background:#fffbeb;border:1px solid #fef3c7;padding:16px;border-radius:8px;color:#b45309;line-height:1.5'>"
+                "<strong>System Configuration Error: FFmpeg not detected!</strong><br/>"
+                "Whisper requires FFmpeg to process and decode audio uploads.<br/><br/>"
+                "<strong>To fix this on Windows:</strong><br/>"
+                "1. Open PowerShell as Administrator and run: <code>winget install Gyan.FFmpeg</code><br/>"
+                "2. <strong>Crucial:</strong> Close and restart your IDE (VS Code), terminal, or command prompt so Windows reloads the new PATH system variable.<br/>"
+                "3. Restart the web app and try again."
+                "</div>",
+                f"Error details: {err_msg}"
+            )
+        return f"<div style='color:red;padding:12px;border:1px solid #fecaca;background:#fef2f2;border-radius:8px;line-height:1.5'><strong>Error processing audio:</strong> {err_msg}</div>", f"Error details: {err_msg}"
     html = build_output_html(result)
     raw  = json.dumps(result, indent=2, ensure_ascii=False)
     return html, raw
@@ -171,7 +186,22 @@ def route_video_complaint(video_file, top_k: int) -> tuple:
     try:
         result = engine.process(video_path=video_file, top_k=int(top_k))
     except ImportError as e:
-        return f"<p style='color:orange'>{e}</p>", ""
+        return f"<p style='color:orange;font-weight:600'>Dependency Error: {e}</p>", ""
+    except Exception as e:
+        err_msg = str(e)
+        if "ffmpeg" in err_msg.lower() or "winerror 2" in err_msg.lower():
+            return (
+                "<div style='background:#fffbeb;border:1px solid #fef3c7;padding:16px;border-radius:8px;color:#b45309;line-height:1.5'>"
+                "<strong>System Configuration Error: FFmpeg not detected!</strong><br/>"
+                "Whisper requires FFmpeg to extract audio from video uploads.<br/><br/>"
+                "<strong>To fix this on Windows:</strong><br/>"
+                "1. Open PowerShell as Administrator and run: <code>winget install Gyan.FFmpeg</code><br/>"
+                "2. <strong>Crucial:</strong> Close and restart your IDE (VS Code), terminal, or command prompt so Windows reloads the new PATH system variable.<br/>"
+                "3. Restart the web app and try again."
+                "</div>",
+                f"Error details: {err_msg}"
+            )
+        return f"<div style='color:red;padding:12px;border:1px solid #fecaca;background:#fef2f2;border-radius:8px;line-height:1.5'><strong>Error processing video:</strong> {err_msg}</div>", f"Error details: {err_msg}"
     html = build_output_html(result)
     raw  = json.dumps(result, indent=2, ensure_ascii=False)
     return html, raw

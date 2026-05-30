@@ -1,4 +1,4 @@
-# Complaint Auto-Routing System
+<img width="1068" height="1267" alt="image" src="https://github.com/user-attachments/assets/37b2c388-17e8-40e3-9cd4-8d2f84b80883" /># Complaint Auto-Routing System
 
 An end-to-end machine learning system that processes citizen complaints submitted in text, audio, or video format. It is designed to run fully offline without external APIs.
 
@@ -14,7 +14,7 @@ It automatically performs the following tasks:
 <img width="1001" height="1279" alt="image" src="https://github.com/user-attachments/assets/681e20c1-a829-4f33-812e-c4296e170ece" />
 
 # Audio Complaint 
-<img width="992" height="1274" alt="image" src="https://github.com/user-attachments/assets/02e6677f-0c7c-4c49-9996-c5dcac5783f3" />
+<img width="1068" height="1267" alt="image" src="https://github.com/user-attachments/assets/928fb767-fd57-40ee-b096-6c3ea97f3207" />
 
 # Video Complaint 
 <img width="984" height="1289" alt="image" src="https://github.com/user-attachments/assets/8cdc0fef-3699-4c48-bee3-84f76c2e9fb7" />

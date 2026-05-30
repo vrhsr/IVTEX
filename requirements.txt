@@ -15,12 +15,12 @@ joblib>=1.3.0
 # Fast vector search for large corpora (optional, drop-in replacement)
 # faiss-cpu>=1.8.0               # pip install faiss-cpu
 
-# Web interface (optional)
-# gradio>=4.20.0                 # pip install gradio
+# Web interface (required for hosting)
+gradio>=4.20.0
 
-# Audio / Video transcription (optional — local model, NOT an API)
-# openai-whisper>=20231117       # pip install openai-whisper
-# ffmpeg-python>=0.2.0           # needed for video audio extraction
+# Audio / Video transcription (local offline Whisper model)
+openai-whisper>=20231117
+ffmpeg-python>=0.2.0
 
 # ──────────────────────────────────────────────────────────
 # System dependencies (for audio/video path):

@@ -21,7 +21,37 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from inference.engine import ComplaintRoutingEngine, SAVE_DIR
 
-# ─── Load engine once at startup ──────────────────────────────
+# ─── Automatic Offline Model Training & Setup ───────────────────
+def ensure_models_trained():
+    required_files = [
+        "embedding_engine.pkl",
+        "officer_classifier.pkl",
+        "priority_classifier.pkl",
+        "eta_regressor.pkl",
+        "label_encoders.pkl",
+        "vector_store.pkl"
+    ]
+    all_exist = all(os.path.exists(os.path.join(SAVE_DIR, f)) for f in required_files)
+    if not all_exist:
+        print("[Startup] Missing trained models. Initiating automatic data generation and training...")
+        
+        # 1. Generate data if missing
+        data_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "synthetic_complaints.csv")
+        if not os.path.exists(data_path):
+            print("[Startup] Generating synthetic complaints dataset...")
+            from data.generate_data import generate_complaints
+            df = generate_complaints(n_per_officer=100)
+            os.makedirs(os.path.dirname(data_path), exist_ok=True)
+            df.to_csv(data_path, index=False)
+            print(f"[Startup] Generated {len(df)} complaints.")
+            
+        # 2. Train models
+        print("[Startup] Training models offline...")
+        from models.train import main as train_main
+        train_main()
+        print("[Startup] Model training complete.")
+
+ensure_models_trained()
 engine = ComplaintRoutingEngine().load(SAVE_DIR)
 
 # Priority colours (HTML)

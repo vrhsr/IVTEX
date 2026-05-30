@@ -14,8 +14,22 @@ No external API keys required.
 
 import os
 import sys
+import glob
 import json
 import textwrap
+
+# ─── Proactive Windows FFmpeg PATH Discovery ────────────────────
+if sys.platform == "win32":
+    # Standard winget installation directory
+    winget_packages = os.path.expandvars(r"%LOCALAPPDATA%\Microsoft\WinGet\Packages")
+    if os.path.exists(winget_packages):
+        # Find any Gyan.FFmpeg bin folder
+        ffmpeg_bins = glob.glob(os.path.join(winget_packages, "Gyan.FFmpeg*", "**", "bin"), recursive=True)
+        if ffmpeg_bins:
+            ffmpeg_path = ffmpeg_bins[0]
+            if ffmpeg_path not in os.environ["PATH"]:
+                os.environ["PATH"] = ffmpeg_path + os.pathsep + os.environ["PATH"]
+                print(f"[Startup] Automatically resolved system FFmpeg path at: {ffmpeg_path}")
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
@@ -95,11 +109,21 @@ def build_output_html(result: dict) -> str:
           <td style="padding:8px 8px;text-align:center;font-size:12px;color:#6366f1;font-weight:600">{s['similarity_score']:.3f}</td>
         </tr>"""
 
+    # Check for audio/video transcription text
+    transcription_section = ""
+    if result.get("source_text"):
+        transcription_section = f"""
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:16px">
+    <div style="font-size:11px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Transcribed Text</div>
+    <div style="font-size:13px;color:#1e293b;line-height:1.5;font-style:italic">"{result['source_text']}"</div>
+  </div>"""
+
     html = f"""
 <div style="font-family:Inter,system-ui,sans-serif;max-width:700px">
 
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+  {transcription_section}
 
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
     <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px">
       <div style="font-size:11px;color:#0369a1;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Assigned Officer</div>
       <div style="font-size:20px;margin:4px 0"></div>
@@ -307,7 +331,7 @@ Upload a video of the complainant speaking.
 
 | Component | Model | Notes |
 |-----------|-------|-------|
-| **Embeddings** | TF-IDF + SVD (256-dim) | Offline baseline; swap for `paraphrase-multilingual-MiniLM-L12-v2` |
+| **Embeddings** | TF-IDF + SVD (256-dim) | Offline baseline; swap for `all-MiniLM-L6-v2` (English SentenceTransformer) |
 | **Officer Routing** | SVM (RBF kernel) | 8-class, probability calibrated |
 | **Priority** | Random Forest | High / Medium / Low |
 | **ETA Prediction** | Gradient Boosting Regressor | MAE ≈ 5–8 days |

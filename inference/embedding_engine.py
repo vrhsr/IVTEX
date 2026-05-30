@@ -24,16 +24,16 @@ class TFIDFEmbeddingEngine:
     """
     Produces 256-dim L2-normalised embeddings via TF-IDF → SVD.
     Works completely offline with no extra downloads.
-    Handles multilingual input through char n-grams.
+    Optimised for English text processing.
     """
 
     def __init__(self, n_components: int = 256):
         self.n_components = n_components
         self.pipeline = Pipeline([
             ("tfidf", TfidfVectorizer(
-                analyzer      = "char_wb",   # char n-grams → language-agnostic
-                ngram_range   = (2, 5),
-                max_features  = 50_000,
+                analyzer      = "word",      # word level
+                stop_words    = "english",   # filter out english stop words
+                max_features  = 20_000,
                 sublinear_tf  = True,
                 strip_accents = "unicode",
                 lowercase     = True,
@@ -63,17 +63,17 @@ class TFIDFEmbeddingEngine:
 # ─────────────────────────────────────────────────────────────
 class SentenceTransformerEngine:
     """
-    Drop-in replacement using paraphrase-multilingual-MiniLM-L12-v2.
-    Supports 50+ languages out-of-the-box.
+    Drop-in replacement using all-MiniLM-L6-v2.
+    State-of-the-art English semantic search embedding model.
     Install: pip install sentence-transformers
-    The model is downloaded once and cached locally (~120 MB).
+    The model is downloaded once and cached locally (~80 MB).
 
     Usage:
         engine = SentenceTransformerEngine()
         vectors = engine.encode(texts)
     """
 
-    def __init__(self, model_name: str = "paraphrase-multilingual-MiniLM-L12-v2"):
+    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
         try:
             from sentence_transformers import SentenceTransformer
             self.model = SentenceTransformer(model_name)

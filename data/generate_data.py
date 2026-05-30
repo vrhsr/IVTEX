@@ -206,25 +206,13 @@ PRIORITY_SIGNALS = {
     ],
 }
 
-MULTILINGUAL_WRAPPERS = [
-    # English-only (majority)
+ENGLISH_WRAPPERS = [
+    # Standard English variations
     lambda t: t,
-    lambda t: t,
-    lambda t: t,
-    lambda t: t,
-    lambda t: t,
-    # Hinglish mix
-    lambda t: f"Bahut bada problem hai. {t} Kripya jaldi action lo.",
-    lambda t: f"Yeh problem bahut serious hai. {t} Please help karo.",
-    lambda t: f"{t} Hamara mohalla bahut pareshan hai. Urgent help chahiye.",
-    # Tamil-English mix
-    lambda t: f"Romba kastam aaguthu. {t} Thayavu seithu help pannunga.",
-    lambda t: f"{t} Ithu romba avasaram. Undan help thevai.",
-    # Hindi transliteration
-    lambda t: f"Mera complaint yeh hai ki {t.lower()} Is par turant dhyan diya jaye.",
-    # Spanish-English (light)
-    lambda t: f"Es urgente. {t} Por favor actúe rápidamente.",
-    lambda t: f"{t} Necesitamos ayuda urgente en esta área.",
+    lambda t: f"Hello, I would like to report this issue. {t}",
+    lambda t: f"Dear team, {t[0].lower() + t[1:] if t else t}",
+    lambda t: f"{t} Please look into this at the earliest.",
+    lambda t: f"I am writing to file a formal complaint. {t}",
 ]
 
 
@@ -260,7 +248,7 @@ def generate_complaints(n_per_officer: int = 100) -> pd.DataFrame:
             filled_text   = fill_template(template_text)
             priority      = random.choices(priorities, weights=weights, k=1)[0]
             eta           = sample_eta(officer_id, priority)
-            wrapper       = random.choice(MULTILINGUAL_WRAPPERS)
+            wrapper       = random.choice(ENGLISH_WRAPPERS)
             # Inject priority signal phrase (50% chance) for realistic text signals
             signal        = random.choice(PRIORITY_SIGNALS[priority])
             if random.random() < 0.70:
@@ -275,7 +263,7 @@ def generate_complaints(n_per_officer: int = 100) -> pd.DataFrame:
                 "department":       officer_info["department"],
                 "priority":         priority,
                 "eta_days":         eta,
-                "language_hint":    "multilingual",
+                "language_hint":    "english",
             })
 
     df = pd.DataFrame(records).sample(frac=1, random_state=42).reset_index(drop=True)

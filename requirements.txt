@@ -1,0 +1,28 @@
+# ──────────────────────────────────────────────────────────
+# Complaint Auto-Routing System — Requirements
+# ──────────────────────────────────────────────────────────
+
+# Core ML (required)
+scikit-learn>=1.4.0
+numpy>=1.26.0
+pandas>=2.0.0
+scipy>=1.12.0
+joblib>=1.3.0
+
+# Offline embedding upgrade (highly recommended — ~120 MB download)
+# sentence-transformers>=2.7.0   # multilingual: paraphrase-multilingual-MiniLM-L12-v2
+
+# Fast vector search for large corpora (optional, drop-in replacement)
+# faiss-cpu>=1.8.0               # pip install faiss-cpu
+
+# Web interface (optional)
+# gradio>=4.20.0                 # pip install gradio
+
+# Audio / Video transcription (optional — local model, NOT an API)
+# openai-whisper>=20231117       # pip install openai-whisper
+# ffmpeg-python>=0.2.0           # needed for video audio extraction
+
+# ──────────────────────────────────────────────────────────
+# System dependencies (for audio/video path):
+#   sudo apt install ffmpeg
+# ──────────────────────────────────────────────────────────
